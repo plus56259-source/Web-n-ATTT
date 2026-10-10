@@ -1,0 +1,9 @@
+{
+  "name": "UniLevelUp — Lên Level Cùng Đại Học",
+  "description": "Nền tảng học tập đỉnh cao dành cho sinh viên Việt Nam: 10 phương pháp khoa học, 12 công cụ học tập thông minh và 7 mini-game ôn bài tương tác cao.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

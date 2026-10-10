@@ -1,0 +1,131 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile storing learning progress, XP, streak, and badges",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "xp": { "type": "number" },
+        "level": { "type": "number" },
+        "streak": { "type": "number" },
+        "lastActiveDate": { "type": "string", "maxLength": 30 },
+        "badges": { "type": "array", "description": "Unlocked badge IDs" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "xp", "level", "streak"]
+    },
+    "Deadline": {
+      "title": "Deadline",
+      "description": "User academic deadlines with countdown and subtasks",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "subject": { "type": "string", "maxLength": 100 },
+        "dueDate": { "type": "string", "maxLength": 50 },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "progress": { "type": "number" },
+        "subtasks": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "subject", "dueDate", "priority"]
+    },
+    "GPACourse": {
+      "title": "GPACourse",
+      "description": "Course grade record for GPA calculation",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "credits": { "type": "number" },
+        "score10": { "type": "number" },
+        "letterGrade": { "type": "string", "maxLength": 5 },
+        "score4": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "credits", "score10", "letterGrade", "score4"]
+    },
+    "EisenTask": {
+      "title": "EisenTask",
+      "description": "Eisenhower matrix priority task",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "enum": ["do", "schedule", "delegate", "eliminate"] },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "category", "completed"]
+    },
+    "GardenPlant": {
+      "title": "GardenPlant",
+      "description": "Pomodoro study tree planted in virtual garden",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["sunflower", "bonsai", "cactus", "lavender", "sakura"] },
+        "name": { "type": "string", "maxLength": 100 },
+        "durationMin": { "type": "number" },
+        "subject": { "type": "string", "maxLength": 100 },
+        "plantedAt": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["bloomed", "wilted"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "name", "durationMin", "subject", "plantedAt", "status"]
+    },
+    "StudyPresence": {
+      "title": "StudyPresence",
+      "description": "Active participant in the virtual Study With Me room",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "avatar": { "type": "string", "maxLength": 100 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "currentGoal": { "type": "string", "maxLength": 200 },
+        "isCamOn": { "type": "boolean" },
+        "camMode": { "type": "string", "enum": ["webcam", "virtual"] },
+        "virtualTheme": { "type": "string", "maxLength": 50 },
+        "isMicOn": { "type": "boolean" },
+        "isSpeaking": { "type": "boolean" },
+        "roomMinutes": { "type": "number" },
+        "streak": { "type": "number" },
+        "cheersCount": { "type": "number" },
+        "lastSeen": { "type": "number" }
+      },
+      "required": ["userId", "name", "currentGoal", "isCamOn", "isMicOn"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Individual student account profile"
+    },
+    "/deadlines/{deadlineId}": {
+      "schema": "Deadline",
+      "description": "Student deadlines"
+    },
+    "/courses/{courseId}": {
+      "schema": "GPACourse",
+      "description": "Student academic courses and grades"
+    },
+    "/eisen_tasks/{taskId}": {
+      "schema": "EisenTask",
+      "description": "Student Eisenhower matrix tasks"
+    },
+    "/garden_plants/{plantId}": {
+      "schema": "GardenPlant",
+      "description": "Student Pomodoro focus trees"
+    },
+    "/study_room_presence/{presenceId}": {
+      "schema": "StudyPresence",
+      "description": "Real-time presence of users in Study With Me room"
+    }
+  }
+}

@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    background-color: #14112E;
+    color: #F5F3FF;
+  }
+}
+
+/* Base body default colors based on theme */
+html.light body {
+  background-color: #F4F6FC;
+  color: #1E293B;
+}
+
+/* Glassmorphism and specialized utilities */
+.glass-panel {
+  background: rgba(30, 26, 69, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.glow-violet {
+  box-shadow: 0 0 25px -5px rgba(108, 77, 255, 0.35);
+}
+
+.glow-pink {
+  box-shadow: 0 0 25px -5px rgba(255, 77, 141, 0.35);
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #14112E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2D2766;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6C4DFF;
+}
+
+/* 3D card tilt & flip */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* ==========================================================================
+   LIGHT MODE STYLING ENGINE (Chế độ Sáng)
+   Hoàn thiện độ tương phản, nền sáng sang trọng, chữ sắc nét, thẻ nổi bật
+   ========================================================================== */
+
+html.light {
+  /* Scrollbar in Light Mode */
+  ::-webkit-scrollbar-track {
+    background: #EEF2F6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+
+  /* Main background resets */
+  .bg-\[\#14112E\] {
+    background-color: #F4F6FC !important;
+  }
+  .bg-\[\#14112E\]\/80,
+  .bg-\[\#14112E\]\/90 {
+    background-color: rgba(244, 246, 252, 0.9) !important;
+  }
+  .bg-\[\#0E0C22\] {
+    background-color: #EAEEF6 !important;
+  }
+  .bg-\[\#1E1A45\] {
+    background-color: #FFFFFF !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03) !important;
+  }
+  .bg-\[\#1E1A45\]\/80,
+  .bg-\[\#1E1A45\]\/90 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+  }
+  .bg-\[\#1C1635\],
+  .bg-\[\#2A1D45\],
+  .bg-\[\#251F52\],
+  .bg-\[\#16122E\] {
+    background-color: #FFFFFF !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+  }
+
+  /* Glassmorphism in Light Mode */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05) !important;
+  }
+
+  /* Modal backdrops */
+  .bg-black\/70,
+  .bg-black\/80,
+  .bg-black\/85 {
+    background-color: rgba(15, 23, 42, 0.5) !important;
+  }
+
+  /* Headings & general white text in Light Mode */
+  .text-white {
+    color: #0F172A !important;
+  }
+  .text-\[\#F5F3FF\] {
+    color: #1E293B !important;
+  }
+  .text-slate-200 {
+    color: #334155 !important;
+  }
+  .text-slate-300 {
+    color: #475569 !important;
+  }
+  .text-slate-400 {
+    color: #64748B !important;
+  }
+
+  /* PROTECT colorful gradient buttons & solid vibrant badges so text stays crisp white */
+  button.bg-gradient-to-r,
+  a.bg-gradient-to-r,
+  .bg-gradient-to-r.text-white,
+  [class*="from-"][class*="to-"] button,
+  button[class*="from-"],
+  a[class*="from-"],
+  .bg-\[\#6C4DFF\],
+  .bg-purple-600,
+  .bg-indigo-600,
+  .bg-pink-600,
+  .bg-rose-500,
+  .bg-emerald-500,
+  .bg-cyan-500,
+  .bg-amber-400 {
+    color: inherit;
+  }
+
+  button.bg-gradient-to-r *,
+  a.bg-gradient-to-r *,
+  button[class*="from-"] *,
+  a[class*="from-"] * {
+    color: #FFFFFF !important;
+  }
+
+  /* Specific exceptions for badges with dark text */
+  .text-slate-950,
+  .text-black {
+    color: #020617 !important;
+  }
+
+  /* Neutral Borders & Dividers in Light Mode */
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/15,
+  .border-white\/20,
+  .border-white\/30 {
+    border-color: rgba(203, 213, 225, 0.7) !important;
+  }
+  .divide-white\/5 > :not([hidden]) ~ :not([hidden]),
+  .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+    border-color: rgba(226, 232, 240, 0.8) !important;
+  }
+
+  /* Subtle background fills (pills, chips, input fields, tabs) */
+  .bg-white\/5 {
+    background-color: #F1F5F9 !important;
+  }
+  .bg-white\/10 {
+    background-color: #E2E8F0 !important;
+  }
+  .bg-white\/15 {
+    background-color: #CBD5E1 !important;
+  }
+  .bg-white\/20 {
+    background-color: #E2E8F0 !important;
+  }
+  .hover\:bg-white\/5:hover {
+    background-color: #F1F5F9 !important;
+  }
+  .hover\:bg-white\/10:hover {
+    background-color: #E2E8F0 !important;
+  }
+  .hover\:bg-white\/15:hover {
+    background-color: #CBD5E1 !important;
+  }
+  .hover\:bg-white\/20:hover {
+    background-color: #CBD5E1 !important;
+  }
+
+  /* Text hovers */
+  .hover\:text-white:hover {
+    color: #0F172A !important;
+  }
+
+  /* Inputs, selects and textareas */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    background-color: #FFFFFF !important;
+    border-color: #CBD5E1 !important;
+    color: #0F172A !important;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #94A3B8 !important;
+  }
+  select option {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+  }
+
+  /* Ambient glow effects softened in Light Mode */
+  .glow-violet {
+    box-shadow: 0 4px 20px -2px rgba(108, 77, 255, 0.18) !important;
+  }
+  .glow-pink {
+    box-shadow: 0 4px 20px -2px rgba(255, 77, 141, 0.18) !important;
+  }
+}
+
+
