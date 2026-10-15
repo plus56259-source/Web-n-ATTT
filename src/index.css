@@ -1,0 +1,625 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html,
+  body,
+  *,
+  *::before,
+  *::after,
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+
+  html {
+    background-color: #091124;
+    min-height: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    background-color: #091124;
+    color: #F1F5F9;
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Base body default colors based on theme */
+html.light {
+  background-color: #F4F6FC;
+}
+
+html.light body {
+  background-color: #F4F6FC;
+  color: #0F172A;
+}
+
+/* Glassmorphism and specialized utilities tuned for starry chill meadow */
+.glass-panel {
+  background: rgba(14, 27, 56, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.glow-violet {
+  box-shadow: 0 0 25px -5px rgba(108, 77, 255, 0.35);
+}
+
+.glow-pink {
+  box-shadow: 0 0 25px -5px rgba(255, 77, 141, 0.35);
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #14112E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2D2766;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6C4DFF;
+}
+
+/* 3D card tilt & flip */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* ==========================================================================
+   LIGHT MODE STYLING ENGINE (Chế độ Sáng)
+   Đồng bộ toàn diện màu sắc của mọi thành phần: Badge, Thẻ, Nút, Bảng, Ô Planner
+   ========================================================================== */
+
+html.light {
+  /* Scrollbar in Light Mode */
+  ::-webkit-scrollbar-track {
+    background: #EEF2F6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+
+  /* 1. Main Background Resets */
+  .bg-\[\#14112E\] {
+    background-color: #F4F6FC !important;
+  }
+  .bg-\[\#14112E\]\/80,
+  .bg-\[\#14112E\]\/90,
+  .bg-\[\#14112E\]\/95 {
+    background-color: rgba(244, 246, 252, 0.92) !important;
+  }
+  .bg-\[\#0E0C22\] {
+    background-color: #EAEEF6 !important;
+  }
+  .bg-\[\#1E1A45\] {
+    background-color: #FFFFFF !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03) !important;
+  }
+  .bg-\[\#1E1A45\]\/80,
+  .bg-\[\#1E1A45\]\/90 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+  }
+  .bg-\[\#1C1635\],
+  .bg-\[\#2A1D45\],
+  .bg-\[\#251F52\],
+  .bg-\[\#16122E\] {
+    background-color: #FFFFFF !important;
+    border-color: rgba(226, 232, 240, 0.9) !important;
+  }
+
+  /* 2. Glassmorphism & Cards */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05) !important;
+  }
+
+  /* Flashcard card gradient & border in light mode */
+  [class*="from-white\/10"][class*="to-white\/5"],
+  [class*="from-white\/10"],
+  .from-white\/10 {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+    border-color: #CBD5E1 !important;
+    box-shadow: 0 6px 25px -4px rgba(15, 23, 42, 0.07) !important;
+  }
+
+  /* 3. Modal backdrops & containers */
+  .bg-black\/30,
+  .bg-black\/60,
+  .bg-black\/70,
+  .bg-black\/80,
+  .bg-black\/85 {
+    background-color: rgba(15, 23, 42, 0.55) !important;
+  }
+
+  /* 4. Headings & General Text in Light Mode */
+  .text-white {
+    color: #0F172A !important;
+  }
+  .text-\[\#F5F3FF\] {
+    color: #1E293B !important;
+  }
+  .text-slate-200 {
+    color: #334155 !important;
+  }
+  .text-slate-300 {
+    color: #475569 !important;
+  }
+  .text-slate-400 {
+    color: #64748B !important;
+  }
+
+  /* 5. VIBRANT HIGH-CONTRAST MAPPING FOR ACCENT TEXTS IN LIGHT MODE */
+  /* Pink */
+  .text-pink-200,
+  .text-pink-300 {
+    color: #BE185D !important;
+  }
+  /* Purple */
+  .text-purple-200,
+  .text-purple-300 {
+    color: #6D28D9 !important;
+  }
+  /* Indigo */
+  .text-indigo-200,
+  .text-indigo-300 {
+    color: #4338CA !important;
+  }
+  /* Amber / Gold */
+  .text-amber-200,
+  .text-amber-300 {
+    color: #B45309 !important;
+  }
+  /* Emerald / Green */
+  .text-emerald-200,
+  .text-emerald-300 {
+    color: #047857 !important;
+  }
+  /* Cyan */
+  .text-cyan-200,
+  .text-cyan-300 {
+    color: #0E7490 !important;
+  }
+  /* Sky */
+  .text-sky-200,
+  .text-sky-300 {
+    color: #0369A1 !important;
+  }
+  /* Blue */
+  .text-blue-200,
+  .text-blue-300 {
+    color: #1D4ED8 !important;
+  }
+  /* Rose */
+  .text-rose-200,
+  .text-rose-300 {
+    color: #BE123C !important;
+  }
+  /* Teal */
+  .text-teal-200,
+  .text-teal-300 {
+    color: #0F766E !important;
+  }
+
+  /* 6. BADGE BACKGROUNDS & BORDERS SYNCHRONIZATION */
+  /* Purple / Primary Violet */
+  .bg-purple-500\/10,
+  .bg-purple-500\/15,
+  .bg-purple-500\/20,
+  .bg-purple-500\/30,
+  .bg-\[\#6C4DFF\]\/10,
+  .bg-\[\#6C4DFF\]\/15,
+  .bg-\[\#6C4DFF\]\/20,
+  .bg-\[\#6C4DFF\]\/30 {
+    background-color: #F5F3FF !important;
+    border-color: #DDD6FE !important;
+  }
+  .border-purple-500\/20,
+  .border-purple-500\/30,
+  .border-purple-500\/40,
+  .border-purple-500\/50,
+  .border-\[\#6C4DFF\]\/30,
+  .border-\[\#6C4DFF\]\/50 {
+    border-color: #C4B5FD !important;
+  }
+
+  /* Pink */
+  .bg-pink-500\/10,
+  .bg-pink-500\/15,
+  .bg-pink-500\/20,
+  .bg-pink-500\/30,
+  .bg-\[\#FF4D8D\]\/10,
+  .bg-\[\#FF4D8D\]\/15,
+  .bg-\[\#FF4D8D\]\/20,
+  .bg-\[\#FF4D8D\]\/30 {
+    background-color: #FDF2F8 !important;
+    border-color: #FBCFE8 !important;
+  }
+  .border-pink-500\/20,
+  .border-pink-500\/30,
+  .border-pink-500\/40,
+  .border-pink-500\/50,
+  .border-\[\#FF4D8D\]\/30 {
+    border-color: #F9A8D4 !important;
+  }
+
+  /* Emerald */
+  .bg-emerald-500\/10,
+  .bg-emerald-500\/15,
+  .bg-emerald-500\/20,
+  .bg-emerald-500\/30,
+  .bg-\[\#12B886\]\/10,
+  .bg-\[\#12B886\]\/15,
+  .bg-\[\#12B886\]\/20 {
+    background-color: #ECFDF5 !important;
+    border-color: #A7F3D0 !important;
+  }
+  .border-emerald-500\/20,
+  .border-emerald-500\/30,
+  .border-emerald-500\/40,
+  .border-emerald-500\/50,
+  .border-\[\#12B886\]\/30 {
+    border-color: #6EE7B7 !important;
+  }
+
+  /* Amber */
+  .bg-amber-500\/10,
+  .bg-amber-500\/15,
+  .bg-amber-500\/20,
+  .bg-amber-500\/30,
+  .bg-\[\#FFB703\]\/10,
+  .bg-\[\#FFB703\]\/15,
+  .bg-\[\#FFB703\]\/20 {
+    background-color: #FFFBEB !important;
+    border-color: #FDE68A !important;
+  }
+  .border-amber-500\/20,
+  .border-amber-500\/30,
+  .border-amber-500\/40,
+  .border-amber-500\/50,
+  .border-\[\#FFB703\]\/30 {
+    border-color: #FCD34D !important;
+  }
+
+  /* Cyan */
+  .bg-cyan-500\/10,
+  .bg-cyan-500\/15,
+  .bg-cyan-500\/20,
+  .bg-cyan-500\/30 {
+    background-color: #ECFEFF !important;
+    border-color: #A5F3FC !important;
+  }
+  .border-cyan-500\/20,
+  .border-cyan-500\/30,
+  .border-cyan-500\/40,
+  .border-cyan-500\/50 {
+    border-color: #67E8F9 !important;
+  }
+
+  /* Sky & Blue */
+  .bg-sky-500\/10,
+  .bg-sky-500\/15,
+  .bg-sky-500\/20,
+  .bg-sky-500\/30,
+  .bg-blue-500\/5,
+  .bg-blue-500\/10,
+  .bg-blue-500\/20 {
+    background-color: #F0F9FF !important;
+    border-color: #BAE6FD !important;
+  }
+  .border-sky-500\/20,
+  .border-sky-500\/30,
+  .border-sky-500\/40,
+  .border-blue-500\/40 {
+    border-color: #7DD3FC !important;
+  }
+
+  /* Rose */
+  .bg-rose-500\/5,
+  .bg-rose-500\/10,
+  .bg-rose-500\/15,
+  .bg-rose-500\/20,
+  .bg-rose-500\/30 {
+    background-color: #FFF1F2 !important;
+    border-color: #FECDD3 !important;
+  }
+  .border-rose-500\/20,
+  .border-rose-500\/30,
+  .border-rose-500\/40 {
+    border-color: #FDA4AF !important;
+  }
+
+  /* Indigo */
+  .bg-indigo-500\/10,
+  .bg-indigo-500\/15,
+  .bg-indigo-500\/20,
+  .bg-indigo-500\/30 {
+    background-color: #EEF2FF !important;
+    border-color: #C7D2FE !important;
+  }
+  .border-indigo-500\/20,
+  .border-indigo-500\/30,
+  .border-indigo-500\/40 {
+    border-color: #A5B4FC !important;
+  }
+
+  /* 7. 168H PLANNER SPECIALIZED CELL SYNCHRONIZATION */
+  /* Lecture (Indigo) */
+  td .bg-indigo-500\/20 {
+    background-color: #EEF2FF !important;
+    color: #312E81 !important;
+    border-color: #C7D2FE !important;
+  }
+  /* Review (Emerald) */
+  td .bg-emerald-500\/20 {
+    background-color: #ECFDF5 !important;
+    color: #065F46 !important;
+    border-color: #A7F3D0 !important;
+  }
+  /* Exercise (Amber) */
+  td .bg-amber-500\/20 {
+    background-color: #FFFBEB !important;
+    color: #78350F !important;
+    border-color: #FDE68A !important;
+  }
+  /* Group Study (Sky) */
+  td .bg-sky-500\/20 {
+    background-color: #F0F9FF !important;
+    color: #075985 !important;
+    border-color: #BAE6FD !important;
+  }
+  /* Club / Part-time (Pink) */
+  td .bg-pink-500\/20 {
+    background-color: #FDF2F8 !important;
+    color: #831843 !important;
+    border-color: #FBCFE8 !important;
+  }
+  /* Rest (Slate) */
+  td .bg-slate-500\/20 {
+    background-color: #F1F5F9 !important;
+    color: #1E293B !important;
+    border-color: #CBD5E1 !important;
+  }
+  /* Deep Work (Purple) */
+  td .bg-\[\#6C4DFF\]\/30 {
+    background-color: #F5F3FF !important;
+    color: #581C87 !important;
+    border-color: #DDD6FE !important;
+  }
+
+  /* 8. POMODORO CLOCK SYNCHRONIZATION */
+  .relative.w-64.h-64.rounded-full,
+  .relative.w-72.h-72.rounded-full {
+    background-color: #F8FAFC !important;
+    border-color: #CBD5E1 !important;
+    box-shadow: inset 0 2px 10px rgba(15, 23, 42, 0.06), 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+  }
+
+  /* 9. EISENHOWER MATRIX QUADRANTS */
+  .border-rose-500\/40.bg-rose-500\/5 {
+    background-color: #FFF1F2 !important;
+    border-color: #FDA4AF !important;
+    color: #9F1239 !important;
+  }
+  .border-blue-500\/40.bg-blue-500\/5 {
+    background-color: #EFF6FF !important;
+    border-color: #BFDBFE !important;
+    color: #1E40AF !important;
+  }
+  .border-amber-500\/40.bg-amber-500\/5 {
+    background-color: #FFFBEB !important;
+    border-color: #FDE68A !important;
+    color: #92400E !important;
+  }
+  .border-slate-500\/40.bg-slate-500\/5 {
+    background-color: #F8FAFC !important;
+    border-color: #E2E8F0 !important;
+    color: #475569 !important;
+  }
+
+  /* 10. CORNELL NOTES SPLIT COLUMNS */
+  .lg\:col-span-4.p-4.rounded-2xl.bg-white\/5 {
+    background-color: #FDF2F8 !important;
+    border-color: #FBCFE8 !important;
+  }
+  .lg\:col-span-8.p-4.rounded-2xl.bg-white\/5 {
+    background-color: #F0F9FF !important;
+    border-color: #BAE6FD !important;
+  }
+
+  /* 11. BUTTONS & SOLID ACCENT BADGES */
+  /* Keep white text on vibrant gradient buttons & solid CTA buttons */
+  button.bg-gradient-to-r,
+  a.bg-gradient-to-r,
+  button[class*="from-"],
+  a[class*="from-"],
+  .bg-\[\#6C4DFF\],
+  .bg-purple-600,
+  .bg-indigo-600,
+  .bg-pink-600,
+  .bg-rose-500,
+  .bg-emerald-500 {
+    color: #FFFFFF !important;
+  }
+
+  button.bg-gradient-to-r span,
+  a.bg-gradient-to-r span,
+  button[class*="from-"] span,
+  a[class*="from-"] span {
+    color: #FFFFFF !important;
+  }
+
+  /* Exceptions for black text on light-bright tags */
+  .text-slate-950,
+  .text-black {
+    color: #020617 !important;
+  }
+
+  /* Neutral Borders & Dividers in Light Mode */
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/15,
+  .border-white\/20,
+  .border-white\/30 {
+    border-color: rgba(203, 213, 225, 0.7) !important;
+  }
+  .divide-white\/5 > :not([hidden]) ~ :not([hidden]),
+  .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+    border-color: rgba(226, 232, 240, 0.8) !important;
+  }
+
+  /* Subtle background fills (pills, chips, input fields, tabs) */
+  .bg-white\/5 {
+    background-color: #F1F5F9 !important;
+  }
+  .bg-white\/10 {
+    background-color: #E2E8F0 !important;
+  }
+  .bg-white\/15 {
+    background-color: #CBD5E1 !important;
+  }
+  .bg-white\/20 {
+    background-color: #E2E8F0 !important;
+  }
+  .hover\:bg-white\/5:hover {
+    background-color: #F1F5F9 !important;
+  }
+  .hover\:bg-white\/10:hover {
+    background-color: #E2E8F0 !important;
+  }
+  .hover\:bg-white\/15:hover {
+    background-color: #CBD5E1 !important;
+  }
+  .hover\:bg-white\/20:hover {
+    background-color: #CBD5E1 !important;
+  }
+
+  /* Text hovers */
+  .hover\:text-white:hover {
+    color: #0F172A !important;
+  }
+
+  /* Inputs, selects and textareas */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    background-color: #FFFFFF !important;
+    border-color: #CBD5E1 !important;
+    color: #0F172A !important;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #94A3B8 !important;
+  }
+  select option {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+  }
+
+  /* Ambient glow effects softened in Light Mode */
+  .glow-violet {
+    box-shadow: 0 4px 20px -2px rgba(108, 77, 255, 0.18) !important;
+  }
+  .glow-pink {
+    box-shadow: 0 4px 20px -2px rgba(255, 77, 141, 0.18) !important;
+  }
+}
+
+/* ========================================================
+   CUSTOM DRAGGABLE HORIZONTAL & VERTICAL SCROLLBARS
+   ======================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 17, 36, 0.85);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0ea5e9, #a855f7);
+  border-radius: 9999px;
+  border: 2px solid rgba(9, 17, 36, 0.9);
+  cursor: grab;
+}
+
+::-webkit-scrollbar-thumb:active {
+  cursor: grabbing;
+  background: linear-gradient(135deg, #38bdf8, #ec4899);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #38bdf8, #f43f5e);
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  border: 2px solid #ffffff;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #4f46e5, #db2777);
+}
+
+

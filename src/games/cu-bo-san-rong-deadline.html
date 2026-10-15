@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>StudyQuest • Cú Bơ Săn Rồng Deadline</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15132b;--vio:#6c4dff;--lem:#ffd84d;--cor:#ff6b6b;--mnt:#19d3a2;--sky:#4db8ff;--cream:#fffaf0}
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#15132b;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);user-select:none;touch-action:none}
+canvas{display:block}
+.hud{position:fixed;inset:0;pointer-events:none;padding:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:5}
+.chip{background:var(--cream);border:2.5px solid var(--ink);border-radius:13px;box-shadow:3px 3px 0 var(--ink);padding:5px 11px;font-weight:800;font-size:14px;display:inline-block;margin-bottom:7px}
+.bar{height:13px;border:2px solid var(--ink);border-radius:8px;background:#fff;overflow:hidden;margin-top:3px;width:150px}
+.bar i{display:block;height:100%;width:100%;background:var(--mnt);transition:width .2s,background .3s}
+#pills{display:flex;gap:4px;justify-content:center}
+#pills b{width:30px;height:30px;border:2.5px solid var(--ink);border-radius:9px;background:#fff7;display:grid;place-items:center;font-size:15px;filter:grayscale(1);opacity:.6}
+#pills b.on{filter:none;opacity:1;background:var(--lem);box-shadow:2px 2px 0 var(--ink)}
+#pills b.cur{filter:none;opacity:1;background:#fff;animation:pu .7s infinite alternate}@keyframes pu{to{transform:scale(1.15)}}
+.prog{width:190px;height:9px;margin:7px auto 0;border:2px solid var(--ink);border-radius:6px;background:#fff8;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--vio)}
+.btn{pointer-events:auto;cursor:pointer;border:2.5px solid var(--ink);background:var(--lem);border-radius:13px;box-shadow:3px 3px 0 var(--ink);font:800 15px 'Be Vietnam Pro',system-ui;padding:9px 16px;color:var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+#qb{position:fixed;left:50%;top:78px;transform:translateX(-50%);width:min(680px,94vw);background:var(--cream);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:8px 14px;text-align:center;z-index:6;display:none}
+#qb small{display:inline-block;background:var(--vio);color:#fff;border-radius:10px;padding:1px 10px;font-weight:800;font-size:11px}
+#qb div{font-weight:800;font-size:clamp(14px,2.4vw,19px);line-height:1.3;margin-top:3px}
+#bh{position:fixed;right:12px;top:100px;width:min(210px,40vw);z-index:6;display:none}#bh .bar{width:100%;height:16px}#bh .bar i{background:var(--cor)}
+#intro{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.7);opacity:0;background:var(--cream);border:3.5px solid var(--ink);border-radius:22px;box-shadow:8px 8px 0 var(--ink);padding:16px 26px;text-align:center;max-width:92vw;width:460px;z-index:7;transition:.35s cubic-bezier(.2,1.5,.4,1);pointer-events:none}
+#intro.on{opacity:1;transform:translate(-50%,-50%) scale(1)}#intro .ic{font-size:50px}#intro h2{margin:2px 0;font-size:26px}#intro p{margin:6px 0 0;font-weight:700;font-size:14px;line-height:1.45}
+#lull{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);width:min(620px,94vw);background:var(--lem);border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink);padding:12px 16px;z-index:8;display:none;font-size:14px;line-height:1.5}
+#lull.bad{background:#ffc9c9}#lull .btn{margin-top:8px;background:var(--mnt)}
+#toast{position:fixed;left:50%;top:128px;transform:translateX(-50%) translateY(-14px);opacity:0;background:var(--cream);border:2.5px solid var(--ink);border-radius:13px;box-shadow:4px 4px 0 var(--ink);padding:8px 14px;font-weight:700;font-size:13px;max-width:90vw;text-align:center;transition:.3s;z-index:7;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%)}
+#joy{position:fixed;left:20px;bottom:24px;width:128px;height:128px;border-radius:50%;background:#ffffff33;border:3px solid #fff9;display:none;z-index:6}
+#joy i{position:absolute;left:34px;top:34px;width:60px;height:60px;border-radius:50%;background:var(--lem);border:3px solid var(--ink)}
+#dsh{position:fixed;right:24px;bottom:34px;width:84px;height:84px;border-radius:50%;background:var(--cor);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font:800 13px 'Be Vietnam Pro';color:#fff;display:none;place-items:center;z-index:6}
+@media (pointer:coarse), (hover:none), (max-width: 900px){#joy{display:block!important}#dsh{display:grid!important}#lull{bottom:150px}}
+.ov{position:fixed;inset:0;background:radial-gradient(#2a1a6acc,#0a0620ee);display:none;place-items:center;z-index:20;padding:12px;overflow:auto}.ov.on{display:grid}
+.card{width:100%;max-width:640px;background:var(--cream);border:3.5px solid var(--ink);border-radius:22px;box-shadow:8px 8px 0 var(--ink);padding:20px;text-align:center;animation:pop .35s cubic-bezier(.2,1.5,.4,1);margin:auto}
+@keyframes pop{from{transform:scale(.8) rotate(-2deg);opacity:0}}
+h1{margin:6px 0;font-size:32px;line-height:1.1}h1 span{background:var(--lem);padding:0 8px;border-radius:8px}
+.tag{display:inline-block;background:var(--cor);color:#fff;font-weight:800;font-size:12px;padding:4px 12px;border-radius:20px;border:2px solid var(--ink)}
+.how{text-align:left;font-size:13.5px;line-height:1.6;background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:11px 15px;margin:12px 0}
+.big{font-size:54px;animation:fl 2.4s infinite ease-in-out}@keyframes fl{50%{transform:translateY(-8px) rotate(4deg)}}
+.hats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0 12px}.hats .btn{font-size:12px;padding:6px 10px;background:#fff}.hats .btn.sel{background:var(--vio);color:#fff}
+.stats{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:10px 0}.stats .chip{margin:0}
+.notes{text-align:left;font-size:13px;max-height:130px;overflow:auto;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:8px 12px}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud" id="hud" style="display:none">
+ <div><div class="chip">❤ <span id="hpv">100</span><div class="bar"><i id="hp"></i></div></div><br><div class="chip">⭐ <span id="xp">0</span> XP</div></div>
+ <div><div id="pills"></div><div class="prog"><i id="pg"></i></div></div>
+ <div style="text-align:right"><button class="btn" id="snd" style="padding:6px 11px">🔊</button><br><div class="chip" id="cb" style="display:none;margin-top:7px;background:var(--cor);color:#fff">🔥 COMBO x<span id="cbv">0</span></div></div>
+</div>
+<div id="qb"><small id="qt"></small><div id="qq"></div></div>
+<div id="bh"><div style="font-weight:800;color:#fff;text-shadow:2px 2px 0 #15132b;font-size:13px">🐉 RỒNG DEADLINE</div><div class="bar"><i id="bhp"></i></div></div>
+<div id="intro"><div class="ic" id="iic"></div><div style="font-weight:800;font-size:12px;color:#6c4dff" id="ilb"></div><h2 id="ink"></h2><p id="itp"></p></div>
+<div id="lull"></div><div id="toast"></div>
+<div id="joy"><i></i></div><div id="dsh">LƯỚT!</div>
+
+<div class="ov on" id="menu"><div class="card">
+ <span class="tag">STUDYQUEST • MINI-GAME</span>
+ <div class="big">🦉</div>
+ <h1>Cú Bơ <span>Săn Rồng Deadline</span></h1>
+ <div style="font-weight:700;color:#6b6880;font-size:14px">Bay qua 6 màn phương pháp học, chọn đúng cổng đáp án và hạ gục Rồng Deadline!</div>
+ <div class="how">
+  🕹 <b>Bay:</b> WASD / phím mũi tên (điện thoại: cần gạt) • <b>Lướt né:</b> Space / Shift. Cú Bơ <b>tự bắn bút mực</b>!<br>
+  🚪 <b>Cổng đáp án:</b> mỗi màn có 3 câu hỏi. Hãy <b>bay xuyên qua làn có đáp án đúng</b>.<br>
+  📱 Bắn hạ <b>quái phân tâm</b> (điện thoại, game, đồng hồ, Zzz) — chạm vào sẽ mất máu.<br>
+  <b>Thứ tự 6 màn:</b> 1️⃣ Mindmap → 2️⃣ Pomodoro → 3️⃣ Group Study → 4️⃣ Active Recall → 5️⃣ Spaced Repetition → 6️⃣ Cornell Notes → 🐉 Boss<br>
+  🌱 <b>Phương pháp phụ</b> (Feynman, Eisenhower, SQ3R…) xuất hiện qua 📖 sách và màn tổng kết.
+ </div>
+ <div style="font-weight:800;font-size:13px">Chọn phụ kiện cho Cú Bơ:</div><div class="hats" id="hats"></div>
+ <div id="hs" style="font-weight:800;margin-bottom:10px"></div>
+ <button class="btn" style="font-size:20px;padding:13px 34px;background:var(--mnt)" id="go">▶ XUẤT PHÁT!</button>
+</div></div>
+<div class="ov" id="end"><div class="card" id="ec"></div></div>
+
+<script>
+const $=s=>document.querySelector(s),R=Math.random,rn=(a,b)=>a+R()*(b-a),pick=a=>a[(R()*a.length)|0];
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=(R()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ===== NỘI DUNG ===== */
+const M=(q,c,w,e)=>({t:'mc',q,a:[c,...w],c:0,e}),T=(q,v,e)=>({t:'tf',q,a:['ĐÚNG','SAI'],c:v?0:1,e});
+const ST=[
+{n:'Mindmap',ic:'🗺️',col:'#19d3a2',sky:['#7fe8d0','#fff2c6'],tip:'Chủ đề ở giữa → nhánh chính → nhánh phụ bằng từ khóa. Hợp môn nhiều nhánh: Lịch sử, Luật, Sinh học.',q:[
+ M('Sơ đồ tư duy (Mindmap) được vẽ bắt đầu từ đâu?','Chủ đề trung tâm ở giữa trang',['Góc trên bên trái, viết từng dòng','Phần kết luận ở cuối','Bất kỳ đâu, không cần chủ đề'],'Chủ đề ở giữa rồi tỏa ra các nhánh chính, nhánh phụ.'),
+ T('Mỗi nhánh Mindmap nên là từ khóa ngắn, không chép nguyên cả câu.',true,'Từ khóa ngắn (1–2 từ) giúp tóm gọn và dễ nhớ; dùng màu và hình để liên kết.'),
+ M('Ai là người có công phổ biến Mind Map trên thế giới?','Tony Buzan',['Walter Pauk','Hermann Ebbinghaus','Francesco Cirillo'],'Walter Pauk – Cornell; Ebbinghaus – đường cong quên; Cirillo – Pomodoro.')]},
+{n:'Pomodoro',ic:'🍅',col:'#ff6b6b',sky:['#ff9a8b','#ffe0b2'],tip:'25 phút tập trung + 5 phút nghỉ. Sau 4 vòng thì nghỉ dài 15–30 phút.',q:[
+ M('Một chu kỳ Pomodoro cơ bản gồm?','25 phút tập trung + 5 phút nghỉ',['60 phút học + 10 phút nghỉ','10 phút học + 2 phút nghỉ','45 phút học + 15 phút nghỉ'],'Sau 4 chu kỳ, bạn nghỉ dài hơn (khoảng 15–30 phút).'),
+ T('Giờ nghỉ 5 phút là lúc nên lướt mạng xã hội thật lâu.',false,'Mạng xã hội dễ kéo dài giờ nghỉ. Hãy đứng dậy, uống nước, vươn vai!'),
+ M('“Pomodoro” trong tiếng Ý nghĩa là gì?','Quả cà chua',['Đồng hồ cát','Sự tập trung','Quả cam'],'Francesco Cirillo dùng chiếc đồng hồ bấm giờ hình quả cà chua.')]},
+{n:'Group Study',ic:'👥',col:'#4db8ff',sky:['#7ec8ff','#e8f6ff'],tip:'Nhóm 3–5 người, mỗi người chuẩn bị trước, thay phiên giảng lại và hỏi chéo nhau.',q:[
+ M('Học nhóm hiệu quả nhất khi nào?','Mỗi người chuẩn bị trước và thay phiên giảng lại',['Cả nhóm chép bài của một người','Chủ yếu trò chuyện cho vui','Một người làm hết, mọi người xem'],'Giảng lại cho bạn là cách học rất mạnh vì buộc bạn phải hiểu thật sự.'),
+ T('Nhóm học lý tưởng thường chỉ khoảng 3–5 người.',true,'Nhóm quá đông dễ lạc đề và có người “ăn bám”.'),
+ M('Có thành viên không đóng góp, nhóm nên làm gì trước tiên?','Phân công rõ phần việc, đặt hạn chót, theo dõi trên bảng chung',['Im lặng gánh hết','Loại ngay không báo trước','Đổi nhóm giữa chừng'],'Google Docs hoặc Trello giúp ai cũng nhìn thấy tiến độ.')]},
+{n:'Active Recall',ic:'🧠',col:'#6c4dff',sky:['#a58bff','#ffd6f5'],tip:'Gập sách lại, tự nhớ lại thay vì đọc đi đọc lại. Quên chỗ nào thì ghi lại chỗ đó.',q:[
+ M('Đâu là ví dụ của Active Recall (tự kiểm tra)?','Gập sách lại và tự viết ra những gì nhớ được',['Đọc lại ghi chú 3 lần liên tiếp','Tô màu highlight toàn bộ trang','Chép lại nguyên văn giáo trình'],'Cố gắng nhớ lại buộc não “truy xuất” — ký ức nhờ vậy chắc hơn.'),
+ T('Đọc đi đọc lại nhiều lần là cách ôn tập hiệu quả nhất.',false,'Đọc lại tạo cảm giác “quen mắt” chứ chưa chắc nhớ. Tự kiểm tra hiệu quả hơn.'),
+ M('Khi tự kiểm tra mà bị quên, bạn nên làm gì?','Mở tài liệu, ghi lại phần quên và thử lại sau',['Bỏ qua cho nhanh','Đọc lướt lại cả chương','Cho rằng mình học dở'],'Chỗ quên chính là nơi cần ôn nhất — hãy ghi vào “sổ lỗi sai”.')]},
+{n:'Spaced Repetition',ic:'📅',col:'#ff9f43',sky:['#ffb36b','#fff0c9'],tip:'Ôn lại ngắt quãng, giãn dần: 1 → 3 → 7 → 14 ngày để nhớ lâu.',q:[
+ M('Spaced Repetition (lặp lại ngắt quãng) nghĩa là?','Ôn nhiều lần, giãn cách dần theo thời gian',['Ôn một lần thật dài','Ôn liên tục không nghỉ','Chỉ ôn trước ngày thi'],'Khoảng cách tăng dần giúp ký ức bền hơn.'),
+ T('Học dồn một đêm trước thi nhớ lâu như ôn rải đều nhiều ngày.',false,'Học dồn có thể đủ qua thi nhưng quên rất nhanh sau đó.'),
+ M('Ai nghiên cứu “đường cong quên lãng”?','Hermann Ebbinghaus',['Tony Buzan','Walter Pauk','Francesco Cirillo'],'Ebbinghaus cho thấy ta quên nhanh nếu không ôn lại đúng lúc.')]},
+{n:'Cornell Notes',ic:'📝',col:'#f5b800',sky:['#ffd84d','#fff7d1'],tip:'Chia trang thành 3 phần: cột gợi ý – vùng ghi chú – tóm tắt cuối trang.',q:[
+ M('Trang ghi chú Cornell chia thành mấy phần chính?','3 phần',['2 phần','5 phần','1 phần'],'Cột gợi ý, vùng ghi chú và phần tóm tắt cuối trang.'),
+ M('Cột gợi ý của Cornell dùng để làm gì?','Viết câu hỏi/từ khóa để tự kiểm tra sau buổi học',['Vẽ trang trí','Chép lại tiêu đề','Để trống cho đẹp'],'Che phần ghi chú đi và tự trả lời các câu hỏi trong cột.'),
+ T('Phương pháp Cornell do giáo sư Walter Pauk phát triển tại Đại học Cornell.',true,'Đây là một trong những cách ghi chép nổi tiếng nhất cho sinh viên.')]}
+];
+const BOSSQ=[
+ M('GPA là viết tắt của?','Grade Point Average',['General Practice Area','Great Paper Award','Grade Per Assignment'],'Điểm trung bình tích lũy, tính theo điểm hệ 4 và số tín chỉ.'),
+ T('Ngủ đủ giấc giúp củng cố trí nhớ sau khi học.',true,'Người trưởng thành thường cần khoảng 7–9 giờ ngủ mỗi đêm.'),
+ M('Phương pháp nào hợp nhất để hệ thống hóa một chương nhiều nhánh kiến thức?','Mindmap',['Học dồn một đêm','Đọc lướt','Chép lại giáo trình'],'Mindmap giúp nhìn toàn cảnh và mối liên hệ giữa các ý.'),
+ M('Chưa muốn bắt đầu học, cách chống trì hoãn hiệu quả là?','Cam kết chỉ làm 5 phút đầu',['Chờ có hứng','Lướt điện thoại một chút','Dời sang ngày mai'],'Bắt đầu là bước khó nhất; làm rồi bạn thường muốn làm tiếp.'),
+ M('“Ảo tưởng thông thạo” nghĩa là?','Thấy tài liệu quen nên tưởng mình đã nhớ',['Học giỏi thật sự','Nhớ nhưng nghĩ mình quên','Không cần ôn nữa'],'Hãy kiểm chứng bằng cách tự trả lời mà không nhìn tài liệu.'),
+ T('Để điện thoại khuất tầm mắt khi học giúp dễ tập trung hơn.',true,'Giảm cám dỗ từ môi trường dễ hơn là cố “gồng ý chí”.'),
+ M('Mốc ôn lại đầu tiên hợp lý theo Spaced Repetition là?','Sau khoảng 1 ngày',['Sau 1 tháng','Sau 1 năm','Không cần ôn'],'Ôn sớm lúc vừa bắt đầu quên sẽ giữ ký ức hiệu quả nhất.'),
+ M('Sau buổi học Cornell, bạn viết câu hỏi vào đâu?','Cột gợi ý',['Phần tóm tắt','Lề ngoài vở','Trang cuối vở'],'Dùng cột này để tự kiểm tra bằng Active Recall.'),
+ T('Làm nhiều việc cùng lúc (multitasking) khi học thường dẫn đến?',false,'Chuyển đổi liên tục làm bạn chậm và dễ sai hơn.')];
+const EXTRA=[['Feynman','giải thích khái niệm bằng lời đơn giản như đang dạy người mới.'],['Ma trận Eisenhower','chia việc theo mức quan trọng/khẩn cấp để biết làm gì trước.'],['SQ3R','Survey–Question–Read–Recite–Review giúp đọc giáo trình dày.'],['Học xen kẽ','trộn nhiều dạng bài thay vì làm mãi một dạng.'],['Cung điện trí nhớ','gắn thông tin vào các vị trí quen thuộc để nhớ danh sách.'],['Sổ lỗi sai','ghi lại câu sai cùng nguyên nhân và ôn lại định kỳ.']];
+const TIPS=['Ngủ đủ 7–9 giờ giúp não củng cố những gì bạn vừa học.','Đứng dậy vận động 5 phút giữa các phiên học giúp đầu óc tỉnh táo.','Thử nhớ lại trước khi mở sách — dù sai — vẫn giúp bạn nhớ tốt hơn.','Mục tiêu nhỏ, cụ thể (“làm 5 bài”) dễ bắt đầu hơn “học Toán”.','Ghi chép bằng lời của mình tốt hơn chép nguyên văn.','Hỏi giảng viên trong giờ tư vấn — đại học rất khuyến khích!','Uống đủ nước giúp bạn tỉnh táo hơn.'];
+
+/* ===== ÂM THANH: NHẠC SYNTHWAVE + SFX BẰNG CODE ===== */
+const A={c:null,on:true,boss:false,step:0,t:0,
+ init(){if(this.c){this.c.resume();return}const c=this.c=new(window.AudioContext||window.webkitAudioContext)();
+  this.m=c.createGain();this.m.gain.value=.5;this.s=c.createGain();this.s.gain.value=.8;this.m.connect(c.destination);this.s.connect(c.destination);
+  const d=c.createDelay(1);d.delayTime.value=.3;const f=c.createGain();f.gain.value=.38;const dl=c.createGain();dl.gain.value=.45;d.connect(f);f.connect(d);d.connect(dl);dl.connect(this.m);this.d=d;
+  const b=c.createBuffer(1,c.sampleRate,c.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=R()*2-1;this.nb=b;this.t=c.currentTime+.1;setInterval(()=>this.sched(),90)},
+ f:n=>440*Math.pow(2,(n-69)/12),
+ o(fr,t,d,type='sine',v=.15,out,sl){const c=this.c,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(fr,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g);g.connect(out||this.s);o.start(t);o.stop(t+d+.05)},
+ n(t,d,type,fr,v=.1,out,q=1){const c=this.c,s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain();s.buffer=this.nb;s.loop=true;fl.type=type;fl.frequency.value=fr;fl.Q.value=q;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0008,t+d);s.connect(fl);fl.connect(g);g.connect(out||this.s);s.start(t);s.stop(t+d+.05)},
+ sched(){if(!this.c||!this.on)return;const B=this.boss,sp=60/(B?150:118)/4,RT=B?[40,40,41,38]:[45,41,48,43];
+  while(this.t<this.c.currentTime+.3){const s=this.step%64,bar=(s>>4)&3,k=s&15,r=RT[bar],t=this.t,M=this.m,ch=(B||bar==0)?[0,3,7,12]:[0,4,7,12];
+   if(k%4==0||(B&&k==10))this.o(135,t,.15,'sine',.6,M,42);
+   if(k==4||k==12)this.n(t,.13,'bandpass',1900,.22,M,.7);
+   if(k%2==0)this.n(t,.04,'highpass',7500,.05,M);
+   if(k%2==0)this.o(this.f(r+(k%8==6?12:0)),t,.2,B?'sawtooth':'square',B?.11:.07,M);
+   this.o(this.f(r+24+ch[k%4]),t,.13,'triangle',.05,this.d);
+   if(k==0)ch.slice(0,3).forEach(n=>this.o(this.f(r+12+n),t,.95,'sawtooth',.018,M));
+   if((k==0||k==6||k==10)&&R()<.65)this.o(this.f(pick([69,72,74,76,79,81])+(B?-12:0)),t,.28,'square',.05,this.d);
+   this.t+=sp;this.step++}},
+ sfx(n){if(!this.c)return;const c=this.c,t=c.currentTime,a=this;
+  ({shoot(){a.o(900,t,.07,'square',.025,null,420)},
+   kill(){a.n(t,.2,'lowpass',1400,.25);a.o(300,t,.15,'square',.08,null,80)},
+   pick(){a.o(988,t,.12,'square',.07);a.o(1480,t+.07,.18,'square',.07)},
+   ok(){[659,830,988,1318].forEach((f,i)=>a.o(f,t+i*.07,.3,'triangle',.18))},
+   no(){a.o(190,t,.4,'sawtooth',.2,null,60);a.n(t,.25,'lowpass',500,.25)},
+   hurt(){a.n(t,.3,'lowpass',900,.4);a.o(110,t,.3,'sine',.4,null,40)},
+   dash(){a.n(t,.25,'bandpass',1500,.12,null,2);a.o(300,t,.2,'sine',.1,null,1000)},
+   gate(){a.o(200,t,.6,'sawtooth',.08,null,900)},
+   clear(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>a.o(f,t+i*.1,.4,'triangle',.2))},
+   roar(){a.n(t,1.4,'lowpass',500,.6,null,2);a.o(90,t,1.4,'sawtooth',.3,null,40);a.o(130,t,1.2,'square',.15,null,50)},
+   fire(){a.n(t,.35,'bandpass',800,.2,null,1)},
+   win(){[523,659,784,1047,1319,1568,2093].forEach((f,i)=>a.o(f,t+i*.12,.6,'triangle',.2))},
+   lose(){[392,349,311,262,196].forEach((f,i)=>a.o(f,t+i*.2,.5,'sawtooth',.1))},
+   click(){a.o(700,t,.06,'square',.06)}})[n]()}};
+
+/* ===== GAME ===== */
+const cv=$('#c'),g=cv.getContext('2d');let cw,ch,S=null,tt=0,keys={},joy={x:0,y:0},hat=+(localStorage.getItem('sqHat')||0);
+const rs=()=>{cw=cv.width=innerWidth;ch=cv.height=innerHeight};addEventListener('resize',rs);rs();
+const HATS=['🎓 Cử nhân','🧙 Phù thủy','😎 Kính ngầu','👑 Vương miện'];
+function buildHats(){$('#hats').innerHTML=HATS.map((h,i)=>`<button class="btn ${i==hat?'sel':''}" data-i="${i}">${h}</button>`).join('');$('#hats').querySelectorAll('button').forEach(b=>b.onclick=()=>{hat=+b.dataset.i;try{localStorage.setItem('sqHat',hat)}catch(e){}A.init();A.sfx('click');buildHats()})}
+buildHats();
+const stars=[...Array(70)].map(()=>({x:R(),y:R()*.6,s:1+R()*2,o:R()*6}));
+const clouds=[...Array(8)].map(()=>({x:R(),y:R()*.45,w:90+R()*140,p:.12+R()*.2}));
+const wr=(t,mw,font)=>{g.font=font;const ws=t.split(' '),L=[];let l='';for(const w of ws){const x=l?l+' '+w:w;if(g.measureText(x).width>mw&&l){L.push(l);l=w}else l=x}L.push(l);return L};
+
+function newGame(){
+ S={mode:'play',st:-1,qi:0,hp:100,xp:0,combo:0,best:0,right:0,total:0,wrong:[],x:190,y:ch/2,vx:0,vy:0,inv:0,shield:0,rapid:0,cd:0,dcd:0,dash:0,bolts:[],en:[],pk:[],fb:[],ps:[],tx:[],G:null,dist:0,sp:60,pickT:300,bossHP:6,bq:[],t0:Date.now(),shake:0,ph:'',pt:0,qs:[],dr:null,bfire:0};
+ A.boss=false;$('#hud').style.display='flex';$('#bh').style.display='none';
+ $('#pills').innerHTML=ST.map(s=>`<b title="${s.n}">${s.ic}</b>`).join('')+'<b title="Boss">🐉</b>';nextStage()}
+function setPh(p){S.ph=p;S.pt=0}
+function intro(ic,lb,n,tp){$('#iic').textContent=ic;$('#ilb').textContent=lb;$('#ink').textContent=n;$('#itp').textContent=tp;$('#intro').classList.add('on');setTimeout(()=>$('#intro').classList.remove('on'),3300)}
+function nextStage(){S.st++;S.qi=0;S.G=null;
+ if(S.st<6){const T=ST[S.st];S.qs=shuf(T.q);intro(T.ic,'MÀN '+(S.st+1)+' / 6',T.n,T.tip)}
+ else{S.bq=shuf(BOSSQ).slice(0,6);A.boss=true;A.sfx('roar');S.dr={x:cw+350,y:ch/2};S.en=[];$('#bh').style.display='block';S.shake=24;intro('🐉','TRÙM CUỐI','Rồng Deadline','Bay qua làn đáp án đúng để làm rồng yếu đi. Né cầu lửa!')}
+ setPh('intro');hud()}
+function hud(){$('#hpv').textContent=Math.max(0,Math.round(S.hp));const e=$('#hp');e.style.width=Math.max(0,S.hp)+'%';e.style.background=S.hp<30?'#ff6b6b':S.hp<60?'#ffd84d':'#19d3a2';$('#xp').textContent=S.xp;
+ [...$('#pills').children].forEach((b,i)=>{b.className=i<S.st?'on':i==S.st?'cur':''});$('#cb').style.display=S.combo>1?'inline-block':'none';$('#cbv').textContent=S.combo;$('#bhp').style.width=S.bossHP/6*100+'%'}
+function toast(t,ms=3000){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove('on'),ms)}
+function fx(x,y,n,c,sp=5){for(let i=0;i<n;i++){const a=R()*6.28,v=1+R()*sp;S.ps.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c,s:2+R()*4})}}
+function ft(x,y,t,c='#15132b'){S.tx.push({x,y,t,c,l:1})}
+function hurt(d,force){if(!force&&(S.inv>0||S.dash>0))return;if(!force&&S.shield>0){S.shield=0;ft(S.x,S.y-40,'KHIÊN VỠ!','#4db8ff');S.inv=1;A.sfx('no');return}
+ S.hp-=d;S.inv=1.1*60;S.combo=0;S.shake=14;A.sfx('hurt');fx(S.x,S.y,16,'#ff6b6b');ft(S.x,S.y-40,'-'+d,'#ff3b3b');hud();if(S.hp<=0)finish(false)}
+
+addEventListener('keydown',e=>{keys[e.code]=1;if(e.code=='Space'||e.code.startsWith('Arrow'))e.preventDefault();if((e.code=='Enter'||e.code=='Space')&&S&&S.mode=='lull')cont()});addEventListener('keyup',e=>keys[e.code]=0);
+const jz=$('#joy'),jk=jz.firstElementChild;
+const jm=e=>{const r=jz.getBoundingClientRect(),t=e.touches[0],dx=t.clientX-r.left-64,dy=t.clientY-r.top-64,d=Math.min(1,Math.hypot(dx,dy)/52),a=Math.atan2(dy,dx);joy.x=Math.cos(a)*d;joy.y=Math.sin(a)*d;jk.style.transform=`translate(${joy.x*38}px,${joy.y*38}px)`;e.preventDefault()};
+jz.addEventListener('touchstart',jm);jz.addEventListener('touchmove',jm);jz.addEventListener('touchend',()=>{joy.x=joy.y=0;jk.style.transform=''});
+$('#dsh').addEventListener('touchstart',e=>{keys.Space=1;e.preventDefault()});$('#dsh').addEventListener('touchend',()=>keys.Space=0);
+$('#snd').onclick=()=>{A.on=!A.on;if(A.m)A.m.gain.value=A.on?.5:0;$('#snd').textContent=A.on?'🔊':'🔇'};
+
+const ETY=[{r:20,hp:1,sp:3.6},{r:30,hp:2,sp:2},{r:24,hp:2,sp:2.6},{r:20,hp:1,sp:4.4}];
+function spawnEnemy(){const t=S.st==0?pick([0,0,1]):(R()*4)|0,d=ETY[t];S.en.push({t,x:cw+40,y:rn(90,ch-60),y0:0,hp:d.hp,r:d.r,sp:d.sp+S.st*.15,ph:R()*6});S.en[S.en.length-1].y0=S.en[S.en.length-1].y}
+function spawnGate(q){S.G={q:{...q},x:cw+140,res:null};setPh('gate');A.sfx('gate');$('#qt').textContent=(S.st<6?ST[S.st].ic+' '+ST[S.st].n.toUpperCase():'🐉 TRÙM RỒNG')+' • '+(q.t=='tf'?'ĐÚNG / SAI':'CHỌN ĐÁP ÁN');$('#qq').textContent=q.q;$('#qb').style.display='block';
+ if(q.t=='mc'){const o=q.a.map((x,i)=>({x,i})),s=shuf(o);S.G.opts=s.map(z=>z.x);S.G.c=s.findIndex(z=>z.i==q.c)}else{S.G.opts=q.a;S.G.c=q.c}}
+const lanes=()=>{const y0=Math.max(150,ch*.2),y1=ch-18,n=S.G.opts.length;return{y0,h:(y1-y0)/n}};
+
+function update(k){tt+=k;if(!S||S.mode!='play')return;S.pt+=k;
+ let ix=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0)+joy.x,iy=(keys.ArrowDown||keys.KeyS?1:0)-(keys.ArrowUp||keys.KeyW?1:0)+joy.y;const m=Math.hypot(ix,iy);if(m>1){ix/=m;iy/=m}
+ if((keys.Space||keys.ShiftLeft||keys.ShiftRight)&&S.dcd<=0){S.dash=15;S.dcd=80;S.inv=Math.max(S.inv,20);A.sfx('dash');fx(S.x,S.y,12,'#fff')}
+ const sp=S.dash>0?13:6;S.vx+=(ix*sp-S.vx)*.18;S.vy+=(iy*sp-S.vy)*.18;S.x=Math.max(50,Math.min(cw*.55,S.x+S.vx*k));S.y=Math.max(60,Math.min(ch-50,S.y+S.vy*k));
+ S.dash-=k;S.dcd-=k;S.inv-=k;S.rapid-=k;S.cd-=k;S.shake*=.88;
+ const spd=(S.ph=='gate'?2.7:3.4+S.st*.2)*(S.ph=='intro'?.7:1);S.dist+=spd*k;
+ if(S.ph!='intro'&&S.cd<=0){S.cd=S.rapid>0?8:15;S.bolts.push({x:S.x+30,y:S.y+4});A.sfx('shoot')}
+ // phase logic
+ if(S.ph=='intro'&&S.pt>200)setPh(S.st<6?'wave':'atk');
+ else if(S.ph=='wave'){S.sp-=k;if(S.sp<=0){S.sp=rn(40,75)-S.st*3;spawnEnemy()}S.pickT-=k;if(S.pickT<=0){S.pickT=rn(240,420);S.pk.push({x:cw+30,y:rn(100,ch-80),k:pick(['cup','cup','shield','rapid','book'])})}
+  if(S.pt>480)spawnGate(S.qs[S.qi])}
+ else if(S.ph=='atk'){const d=S.dr;d.x+=(cw-150-d.x)*.03*k;S.bfire-=k;if(S.bfire<=0&&d.x<cw-100){S.bfire=rn(55,85);const a=Math.atan2(S.y-d.y,S.x-d.x);S.fb.push({x:d.x-120,y:d.y-20,vx:Math.cos(a)*5.2,vy:Math.sin(a)*5.2});A.sfx('fire')}
+  if(R()<.004*k)S.pk.push({x:cw+30,y:rn(100,ch-80),k:pick(['cup','shield'])});if(S.pt>420)spawnGate(S.bq[S.qi])}
+ else if(S.ph=='gate'){const G=S.G;G.x-=spd*k;if(!G.res&&G.x<=S.x+20)resolve()}
+ // entities
+ for(let i=S.bolts.length-1;i>=0;i--){const b=S.bolts[i];b.x+=12*k;if(b.x>cw+30)S.bolts.splice(i,1)}
+ for(let i=S.en.length-1;i>=0;i--){const e=S.en[i];e.x-=e.sp*k;if(e.t==1)e.y=e.y0+Math.sin(tt/22+e.ph)*60;if(e.t==2)e.y+=(S.y-e.y)*.012*k;if(e.t==3)e.y=e.y0+Math.sin(tt/8+e.ph)*35;
+  if(Math.hypot(e.x-S.x,e.y-S.y)<e.r+17){hurt(10);S.en.splice(i,1);fx(e.x,e.y,12,'#fff');continue}
+  let dead=false;for(let j=S.bolts.length-1;j>=0;j--){const b=S.bolts[j];if(Math.hypot(e.x-b.x,e.y-b.y)<e.r+8){S.bolts.splice(j,1);e.hp--;fx(b.x,b.y,5,'#ffd84d',3);if(e.hp<=0){dead=true;break}}}
+  if(dead){S.xp+=5;A.sfx('kill');fx(e.x,e.y,18,ST[Math.min(S.st,5)].col,6);ft(e.x,e.y-20,'+5','#15132b');if(R()<.22)S.pk.push({x:e.x,y:e.y,k:'star'});S.en.splice(i,1);hud();continue}
+  if(e.x<-60)S.en.splice(i,1)}
+ for(let i=S.fb.length-1;i>=0;i--){const f=S.fb[i];f.x+=f.vx*k;f.y+=f.vy*k;if(Math.hypot(f.x-S.x,f.y-S.y)<26){hurt(15);S.fb.splice(i,1);fx(f.x,f.y,14,'#ff9100');continue}
+  let hit=false;for(let j=S.bolts.length-1;j>=0;j--)if(Math.hypot(f.x-S.bolts[j].x,f.y-S.bolts[j].y)<24){S.bolts.splice(j,1);hit=true;break}
+  if(hit){fx(f.x,f.y,14,'#ff9100');S.xp+=3;S.fb.splice(i,1);continue}if(f.x<-40||f.y<-40||f.y>ch+40)S.fb.splice(i,1)}
+ for(let i=S.pk.length-1;i>=0;i--){const p=S.pk[i];p.x-=spd*k;if(Math.hypot(p.x-S.x,p.y-S.y)<36){S.pk.splice(i,1);A.sfx('pick');fx(p.x,p.y,12,'#ffd84d');
+   if(p.k=='cup'){S.hp=Math.min(100,S.hp+22);ft(S.x,S.y-40,'+22 ❤','#19a07a')}else if(p.k=='star'){S.xp+=5}else if(p.k=='shield'){S.shield=1;ft(S.x,S.y-40,'🛡 KHIÊN','#4db8ff')}else if(p.k=='rapid'){S.rapid=600;ft(S.x,S.y-40,'⚡ BẮN NHANH','#f5b800')}
+   else{S.xp+=10;if(R()<.5){const x=pick(EXTRA);toast('📖 Phương pháp phụ — '+x[0]+': '+x[1],5200)}else toast('📖 Mẹo: '+pick(TIPS),4200)}hud()}else if(p.x<-40)S.pk.splice(i,1)}
+ for(let i=S.ps.length-1;i>=0;i--){const p=S.ps[i];p.x+=p.vx*k;p.y+=p.vy*k;p.l-=.03*k;if(p.l<=0)S.ps.splice(i,1)}
+ for(let i=S.tx.length-1;i>=0;i--){const p=S.tx[i];p.y-=.8*k;p.l-=.02*k;if(p.l<=0)S.tx.splice(i,1)}
+ $('#pg').style.width=(S.st<6?Math.min(100,(S.qi*100+ (S.ph=='wave'?S.pt/480*100:S.ph=='gate'?100:0))/3):(6-S.bossHP)/6*100)+'%'}
+
+function resolve(){const G=S.G,L=lanes();let lane=Math.floor((S.y-L.y0)/L.h);lane=Math.max(0,Math.min(G.opts.length-1,lane));const good=lane==G.c;G.res={lane,good};
+ $('#qb').style.display='none';S.total++;const q=G.q;
+ if(good){S.right++;S.combo++;S.best=Math.max(S.best,S.combo);const gain=20+Math.min(S.combo,10)*3;S.xp+=gain;A.sfx('ok');fx(S.x+40,S.y,30,'#19d3a2',8);ft(S.x,S.y-50,'+'+gain+' XP','#19a07a');S.shake=6;
+  if(S.st==6){S.bossHP--;S.shake=22;fx(S.dr.x-60,S.dr.y,50,'#ffd84d',10)}}
+ else{S.combo=0;A.sfx('no');S.wrong.push({q:q.q,a:G.opts[G.c],e:q.e});hurt(S.st==6?25:20,true);if(S.st==6){A.sfx('fire');for(let i=0;i<6;i++)S.fb.push({x:S.dr.x-120,y:S.dr.y+rn(-60,60),vx:-rn(6,10),vy:rn(-1.5,1.5)});if(S.bq.length<11)S.bq.push({...q})}}
+ hud();if(S.hp<=0)return;
+ const e=$('#lull');e.className=good?'':'bad';e.innerHTML=`<b>${good?'🎉 Chính xác!':'💡 Chưa đúng — đáp án: '+G.opts[G.c]}</b><br>${q.e}<br><button class="btn" id="nxt">Tiếp tục ▶</button>`;e.style.display='block';$('#nxt').onclick=cont;S.mode='lull'}
+function cont(){if(!S||S.mode!='lull')return;A.sfx('click');$('#lull').style.display='none';S.mode='play';S.G=null;S.qi++;
+ if(S.st==6){if(S.bossHP<=0||S.qi>=S.bq.length){finish(true);return}setPh('atk');return}
+ if(S.qi>=3){S.xp+=50;A.sfx('clear');toast('🏆 Hoàn thành màn '+(S.st+1)+': '+ST[S.st].n+'! +50 XP',3500);S.bolts=[];nextStage()}else setPh('wave');hud()}
+function finish(win){if(S.mode=='end')return;S.mode='end';A.boss=false;$('#hud').style.display='none';$('#qb').style.display='none';$('#bh').style.display='none';$('#lull').style.display='none';A.sfx(win?'win':'lose');
+ const acc=S.total?S.right/S.total:0,stars=win?(acc>.85?3:acc>.65?2:1):0,sec=Math.round((Date.now()-S.t0)/1000),hs=Math.max(+localStorage.getItem('sqDHS')||0,S.xp);try{localStorage.setItem('sqDHS',hs)}catch(e){}
+ const rank=['Chưa qua ải 😴','Tân sinh viên 🌱','Chiến thần ôn thi ⚔️','Huyền thoại campus 👑'][stars];
+ $('#ec').innerHTML=`<div class="big">${win?'🏆':'💤'}</div><h1>${win?'Bạn đã <span>hạ Rồng Deadline!</span>':'Rồng Deadline <span>thắng rồi…</span>'}</h1><div style="font-size:32px;margin:4px">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><div style="font-weight:800">Danh hiệu: ${rank}</div>
+ <div class="stats"><span class="chip">⭐ ${S.xp} XP</span><span class="chip">🎯 ${S.right}/${S.total} đúng</span><span class="chip">🔥 Combo ${S.best}</span><span class="chip">⏱ ${Math.floor(sec/60)}p${sec%60}s</span><span class="chip">🏅 Kỷ lục ${hs}</span></div>
+ ${S.wrong.length?'<div style="font-weight:800;text-align:left;margin:6px 0 4px">📒 Sổ lỗi sai — ôn lại ngay nhé:</div><div class="notes">'+S.wrong.slice(0,8).map(w=>`• <b>${w.q}</b><br>&nbsp;&nbsp;→ ${w.a}`).join('<br>')+'</div>':'<div style="font-weight:800">Không sai câu nào — quá đỉnh! 🎉</div>'}
+ <div style="font-weight:800;text-align:left;margin:10px 0 4px">🌱 Phương pháp phụ nên thử thêm:</div><div class="notes">${EXTRA.map(x=>'• <b>'+x[0]+'</b>: '+x[1]).join('<br>')}</div>
+ <div style="margin-top:8px;font-size:13px;font-weight:700;color:#6b6880">${win?'Nhớ: kiến thức chỉ bền khi bạn ôn lại ngắt quãng!':'Mẹo: tránh điện thoại, giữ năng lượng và đọc kỹ mẹo ở đầu mỗi màn!'}</div><button class="btn" id="again" style="margin-top:12px;background:var(--mnt);font-size:18px">↻ CHƠI LẠI</button>`;
+ $('#end').classList.add('on');$('#again').onclick=()=>{$('#end').classList.remove('on');A.sfx('click');newGame()}}
+
+/* ===== VẼ ===== */
+function mount(off,base,amp,col){g.fillStyle=col;g.beginPath();g.moveTo(0,ch);for(let x=0;x<=cw+20;x+=20){const u=x+off;g.lineTo(x,base-(Math.sin(u*.006)*amp+Math.sin(u*.017)*amp*.45+amp))}g.lineTo(cw,ch);g.closePath();g.fill()}
+function owl(x,y,s,fl,h){g.save();g.translate(x,y);g.scale(s,s);g.lineWidth=3;g.strokeStyle='#15132b';const w=Math.sin(fl)*.8;g.fillStyle='#ffc61a';
+ for(const sd of[-1,1]){g.save();g.translate(sd*24,-6);g.rotate(sd*(.5+w));g.beginPath();g.ellipse(sd*14,0,22,10,0,0,6.3);g.fill();g.stroke();g.restore()}
+ g.fillStyle='#ffd84d';g.beginPath();g.ellipse(0,0,30,34,0,0,6.3);g.fill();g.stroke();g.fillStyle='#fffaf0';g.beginPath();g.ellipse(0,12,18,20,0,0,6.3);g.fill();
+ g.fillStyle='#fff';for(const ex of[-12,12]){g.beginPath();g.arc(ex,-10,11,0,6.3);g.fill();g.stroke()}g.fillStyle='#15132b';g.beginPath();g.arc(-8,-10,4.5,0,6.3);g.arc(16,-10,4.5,0,6.3);g.fill();
+ g.fillStyle='#ff6b6b';g.beginPath();g.moveTo(-5,-1);g.lineTo(5,-1);g.lineTo(0,8);g.closePath();g.fill();g.stroke();
+ if(h==0){g.fillStyle='#6c4dff';g.beginPath();g.moveTo(-30,-30);g.lineTo(0,-44);g.lineTo(30,-30);g.lineTo(0,-22);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(28,-31);g.lineTo(34,-14);g.stroke();g.fillStyle='#ffd84d';g.beginPath();g.arc(34,-12,4,0,6.3);g.fill();g.stroke()}
+ if(h==1){g.fillStyle='#7b4dd6';g.beginPath();g.moveTo(-32,-28);g.lineTo(-4,-70);g.lineTo(34,-28);g.closePath();g.fill();g.stroke();g.fillStyle='#ffd84d';g.beginPath();g.arc(-4,-44,5,0,6.3);g.fill()}
+ if(h==2){g.fillStyle='#15132b';g.fillRect(-26,-18,52,12);g.fillStyle='#4db8ff';g.fillRect(-24,-16,20,8);g.fillRect(4,-16,20,8)}
+ if(h==3){g.fillStyle='#ffd84d';g.beginPath();g.moveTo(-24,-28);g.lineTo(-24,-48);g.lineTo(-12,-36);g.lineTo(0,-52);g.lineTo(12,-36);g.lineTo(24,-48);g.lineTo(24,-28);g.closePath();g.fill();g.stroke()}
+ g.restore()}
+function enemy(e){g.save();g.translate(e.x,e.y);g.lineWidth=3;g.strokeStyle='#15132b';
+ if(e.t==0){g.rotate(Math.sin(tt/4)*.15);g.fillStyle='#2b2b3d';g.beginPath();g.roundRect(-14,-23,28,46,6);g.fill();g.stroke();g.fillStyle=tt%30<15?'#4db8ff':'#9be3ff';g.fillRect(-10,-17,20,30);g.fillStyle='#ff6b6b';g.beginPath();g.arc(13,-21,8,0,6.3);g.fill();g.stroke();g.fillStyle='#fff';g.font='800 10px sans-serif';g.textAlign='center';g.fillText('9+',13,-18)}
+ if(e.t==1){g.fillStyle='#f0ecff';g.beginPath();g.ellipse(0,0,32,20,0,0,6.3);g.ellipse(-16,-8,16,13,0,0,6.3);g.ellipse(14,-10,18,14,0,0,6.3);g.fill();g.stroke();g.fillStyle='#6c4dff';g.font='800 16px sans-serif';g.textAlign='center';g.fillText('Zzz',0,6);if(e.hp<2){g.fillStyle='#ff6b6b55';g.fillRect(-30,-4,60,8)}}
+ if(e.t==2){g.fillStyle='#6c4dff';g.beginPath();g.ellipse(0,0,28,18,0,0,6.3);g.fill();g.stroke();g.fillStyle='#fff';g.fillRect(-18,-3,12,6);g.fillRect(-15,-6,6,12);g.fillStyle='#ffd84d';g.beginPath();g.arc(12,-4,4,0,6.3);g.arc(20,2,4,0,6.3);g.fill()}
+ if(e.t==3){g.fillStyle='#fff';g.beginPath();g.arc(0,0,20,0,6.3);g.fill();g.stroke();g.beginPath();g.moveTo(0,0);g.lineTo(0,-13);g.moveTo(0,0);g.lineTo(9,4);g.stroke();g.fillStyle='#ff6b6b';g.fillRect(-7,-27,14,6);g.fillStyle='#fff';g.font='800 9px sans-serif';g.textAlign='center'}
+ g.restore()}
+function dragon(){const d=S.dr,y=d.y+Math.sin(tt/25)*16;g.save();g.translate(d.x,y);g.lineWidth=4;g.strokeStyle='#15132b';
+ const w=Math.sin(tt/11)*.3;g.fillStyle='#a31f2a';g.save();g.rotate(w);g.beginPath();g.moveTo(20,-30);g.lineTo(90,-190);g.lineTo(50,-95);g.lineTo(150,-140);g.lineTo(70,-10);g.closePath();g.fill();g.stroke();g.restore();
+ g.strokeStyle='#e63946';g.lineWidth=26;g.lineCap='round';g.beginPath();g.moveTo(60,30);g.quadraticCurveTo(170,70+Math.sin(tt/18)*28,200,150);g.stroke();g.strokeStyle='#15132b';g.lineWidth=4;
+ g.fillStyle='#e63946';g.beginPath();g.ellipse(0,0,105,82,0,0,6.3);g.fill();g.stroke();g.fillStyle='#ffd84d';g.beginPath();g.ellipse(-24,26,56,50,0,0,6.3);g.fill();
+ g.fillStyle='#e63946';g.beginPath();g.ellipse(-122,-26,64,46,-.15,0,6.3);g.fill();g.stroke();g.fillStyle='#ffd84d';for(const s of[-1,1]){g.beginPath();g.moveTo(-100+s*20,-62);g.lineTo(-90+s*40,-112);g.lineTo(-76+s*20,-62);g.closePath();g.fill();g.stroke()}
+ g.fillStyle='#fff';g.beginPath();g.arc(-122,-38,15,0,6.3);g.fill();g.stroke();g.fillStyle='#15132b';g.beginPath();g.arc(-128,-36,6,0,6.3);g.fill();g.fillStyle='#15132b';g.beginPath();g.arc(-172,-30,4,0,6.3);g.fill();
+ if(S.bfire>0&&S.bfire<25){const gr=g.createRadialGradient(-180,-14,2,-180,-14,45);gr.addColorStop(0,'#fff');gr.addColorStop(.5,'#ffb300');gr.addColorStop(1,'#ff1744');g.fillStyle=gr;g.globalAlpha=.9;g.beginPath();g.arc(-180,-14,34,0,6.3);g.fill();g.globalAlpha=1}
+ g.restore()}
+function gateDraw(){const G=S.G;if(!G)return;const L=lanes(),cols=['#ff8a80','#82d4ff','#8af0cf','#ffe680'];const W=Math.min(250,cw*.3);
+ const cur=Math.max(0,Math.min(G.opts.length-1,Math.floor((S.y-L.y0)/L.h)));
+ G.opts.forEach((o,i)=>{const x=G.x-W/2,y=L.y0+i*L.h+4,h=L.h-8,r=G.res,on=!r&&i==cur;let fill=cols[i%4];if(r){fill=i==G.c?'#19d3a2':(i==r.lane?'#ff4b4b':'#cfcce0')}
+  g.save();if(on){g.shadowColor='#fff';g.shadowBlur=24}g.fillStyle=fill;g.strokeStyle='#15132b';g.lineWidth=on?5:3;g.beginPath();g.roundRect(x,y,W,h,14);g.fill();g.stroke();g.restore();
+  g.fillStyle='#15132b';g.beginPath();g.arc(x+17,y+h/2,12,0,6.3);g.fill();g.fillStyle='#fffaf0';g.font='800 14px "Be Vietnam Pro",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(G.opts.length==2?(i?'✗':'✓'):'ABCD'[i],x+17,y+h/2+1);
+  const fs=Math.max(10,Math.min(16,h/4.2)),ls=wr(o,W-52,'800 '+fs+'px "Be Vietnam Pro",sans-serif').slice(0,4);g.fillStyle='#15132b';g.textAlign='left';ls.forEach((l,j)=>g.fillText(l,x+36,y+h/2+(j-(ls.length-1)/2)*(fs+2)))});
+ g.textBaseline='alphabetic'}
+function draw(){const sk=S&&S.st>=0?(S.st==6?['#3a0f2e','#ff5a3c']:ST[S.st].sky):['#7fe8d0','#fff2c6'],off=S?S.dist:tt*3;
+ const gr=g.createLinearGradient(0,0,0,ch);gr.addColorStop(0,sk[0]);gr.addColorStop(1,sk[1]);g.fillStyle=gr;g.fillRect(0,0,cw,ch);
+ if(S&&S.st==6){g.fillStyle='#fff';for(const s of stars){g.globalAlpha=.4+.4*Math.sin(tt/20+s.o);g.fillRect(s.x*cw,s.y*ch,s.s,s.s)}g.globalAlpha=1}
+ g.fillStyle='#fff7d6';g.shadowColor='#fff7d6';g.shadowBlur=40;g.beginPath();g.arc(cw*.78,ch*.2,44,0,6.3);g.fill();g.shadowBlur=0;
+ g.fillStyle='#ffffffaa';for(const c of clouds){const x=((c.x*cw*2-off*c.p)%(cw+300)+cw+300)%(cw+300)-150,y=c.y*ch;g.beginPath();g.ellipse(x,y,c.w,c.w*.2,0,0,6.3);g.ellipse(x+c.w*.35,y-9,c.w*.5,c.w*.18,0,0,6.3);g.fill()}
+ mount(off*.15,ch*.72,40,'#15132b2e');mount(off*.35,ch*.82,28,'#15132b4d');
+ const gy=ch-26;g.fillStyle='#15132b';g.fillRect(0,gy,cw,40);g.fillStyle='#ffd84d';for(let x=-((off*1.0)%60);x<cw;x+=60)g.fillRect(x,gy+10,30,4);
+ g.fillStyle='#15132b';for(let x=-((off*.8)%420)+100;x<cw;x+=420){g.fillRect(x,gy-70,5,70);g.beginPath();g.arc(x+2,gy-74,9,0,6.3);g.fillStyle='#ffd84d';g.fill();g.fillStyle='#15132b'}
+ if(!S)return;
+ for(const p of S.pk){const y=p.y+Math.sin(tt/15+p.x)*4;g.save();g.translate(p.x,y);g.lineWidth=2.5;g.strokeStyle='#15132b';
+  if(p.k=='star'){g.fillStyle='#ffd84d';g.beginPath();for(let k=0;k<10;k++){const a=k*.628-1.57,r=k%2?6:15;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.closePath();g.fill();g.stroke()}
+  else{g.font='28px serif';g.textAlign='center';g.textBaseline='middle';g.fillText({cup:'☕',shield:'🛡️',rapid:'⚡',book:'📖'}[p.k],0,0);g.textBaseline='alphabetic'}g.restore()}
+ if(S.st==6&&S.dr)dragon();
+ for(const e of S.en)enemy(e);
+ for(const f of S.fb){const gl=g.createRadialGradient(f.x,f.y,2,f.x,f.y,22);gl.addColorStop(0,'#fff');gl.addColorStop(.4,'#ffb300');gl.addColorStop(1,'#ff174400');g.fillStyle=gl;g.beginPath();g.arc(f.x,f.y,22,0,6.3);g.fill()}
+ const col=S.st>=0&&S.st<6?ST[S.st].col:'#ff6b6b';for(const b of S.bolts){g.save();g.shadowColor=col;g.shadowBlur=12;g.fillStyle='#fff';g.strokeStyle=col;g.lineWidth=3;g.beginPath();g.ellipse(b.x,b.y,11,4,0,0,6.3);g.fill();g.stroke();g.restore()}
+ gateDraw();
+ const ox=(R()-.5)*S.shake,oy=(R()-.5)*S.shake;
+ if(S.mode!='end'){if(S.inv>0&&tt%6<3&&S.dash<=0)g.globalAlpha=.4;
+  if(S.shield){g.strokeStyle='#4db8ff';g.lineWidth=4;g.beginPath();g.arc(S.x+ox,S.y+oy,44,0,6.3);g.stroke()}
+  if(S.dash>0){g.fillStyle='#fff7';for(let i=1;i<5;i++)g.fillRect(S.x-i*18,S.y-12,16,6)}
+  owl(S.x+ox,S.y+oy+Math.sin(tt/10)*3,.85,tt/3,hat);g.globalAlpha=1}
+ for(const p of S.ps){g.globalAlpha=Math.max(0,p.l);g.fillStyle=p.c;g.fillRect(p.x,p.y,p.s,p.s)}g.globalAlpha=1;
+ for(const p of S.tx){g.globalAlpha=Math.max(0,p.l);g.fillStyle=p.c;g.strokeStyle='#fffaf0';g.lineWidth=4;g.font='800 18px "Be Vietnam Pro",sans-serif';g.textAlign='center';g.strokeText(p.t,p.x,p.y);g.fillText(p.t,p.x,p.y)}g.globalAlpha=1}
+let last=performance.now();(function loop(now){const k=Math.min(2.5,(now-last)/16.667);last=now;if(S)update(k);else tt+=k;draw();requestAnimationFrame(loop)})(last);
+const hv=+localStorage.getItem('sqDHS')||0;if(hv)$('#hs').textContent='🏅 Kỷ lục của bạn: '+hv+' XP';
+$('#go').onclick=()=>{A.init();A.sfx('click');$('#menu').classList.remove('on');newGame()};
+</script>
+</body>
+</html>
